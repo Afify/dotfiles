@@ -1,0 +1,177 @@
+[user]
+	name = afify
+	email = hassan@afify.dev
+	signingkey = E7855210AD9062A0
+
+[init]
+	defaultBranch = main
+
+[core]
+	editor = vim
+	excludesfile = ~/.config/git/.gitignore
+
+[color]
+	ui = auto
+	diff = auto
+	status = always
+	branch = auto
+	interactive = auto
+
+[fetch]
+	prune = true
+
+[pull]
+	rebase = true
+
+[rebase]
+	autoStash = true
+	autoSquash = true
+
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
+
+[mergetool]
+	prompt = false
+	keepBackup = false
+
+[diff]
+	tool = vimdiff
+	algorithm = patience
+	renames = copies
+
+[difftool]
+	prompt = false
+
+[commit]
+	gpgsign = true
+	verbose = true
+	template = ~/.config/git/.gitmessage
+
+[push]
+	default = current
+	followTags = true
+
+[github]
+	user = afify
+
+[log]
+	date = local
+	extendedRegexp = true
+
+[gpg]
+	program = gpg2
+
+[credential]
+	helper = cache --timeout=600
+
+[sendemail]
+	smtpserver = mail.privateemail.com
+	smtpuser = hassan@afify.dev
+	smtpencryption = tls
+	smtpserverport = 587
+
+[alias]
+	st = !git status | less -R
+	s = status --short --branch
+	ch = checkout
+	remotes = remote -v
+
+# Merge
+	m = merge
+	mf = merge FETCH_HEAD
+	ms = merge -squash
+	chp = cherry-pick -e #hash..#otherhashrange # choose a commit from one branch and apply it onto another
+	chc = cherry-pick --continue
+	show-unmerged-commits = cherry -v main #branch
+	merge-aboard = merge --abort
+# 	show-unmerged-fullcommits = !git log $1 --not main --stat && echo
+
+# Push
+	p = push github main
+	pushall = !git remote | xargs -L1 git push
+	show-unpushed-branches = log --branches --not --remotes --simplify-by-decoration --decorate --oneline
+# 	show-unpushed-commits =
+
+# Diff
+	d = difftool HEAD
+	create-diff = !sh ~/.scripts/create_diff_git.sh
+	apply-diff = !git apply $(find . -type f -name "*.diff" -o -name "*.patch" | dmenu -p 'select diff file' -l 10)
+	# df = difftool main..otherbr -- filename
+
+# Commit
+	c = commit -S # commit and sign
+	cedit = !git commit --amend && git push --force github main # edit last commit message
+# 	commit_old = commit --date "Wed Feb 16 14:00 2020 +0100" -S
+	# git show commit:filename                           # show_file_old_commit
+
+# Tags
+	t = tag -a -s  #tagname                        # create annotated tag
+	tlight = tag -s #tagname  #commit_name         # create lightweight tag
+	tc = !git tag -a -s -m "v$(awk '/^VERSION/{print $NF}' config.mk)" \
+		v$(awk '/^VERSION/{print $NF}' config.mk) # new tag C
+	push-tag = push github #tagname
+	pushall-tags = push github --tags
+	fetch-tag = fetch --tags
+	delete-tag = tag --delete # tagname
+	delete-remote-tag = push --delete github # tagname
+	tv = tag -v # tagname
+	tags = tag -l -n
+	tag-tobranch = checkout -b tag_temp_branch #tagname
+# 	git tag new old
+# 	git tag -d old
+# 	git push origin :refs/tags/old
+# 	git push --tags
+	# git tag <tag name> <tag name>^{} -f -a -s
+
+# Log
+	ll    = log --all --graph --pretty=format:"%C(#0080ff)%h\\ %C(#cd9a00)<%an>\\ %C(#c0d6de)%s\\ %C(#17b062)%d"
+	lgpg  = log --all --graph --pretty=format:"%C(#0080ff)%h\\ %C(#cd9a00)%G?\\ \\%C(#c0d6de)%s\\%C(#17b062)%d"
+	ld    = log --all --graph --date=format:'%a %d %b %Y' --pretty=format:"%C(#0080ff)%h\\ %C(#cd9a00)<%an>\\ %C(#888888)(%cd)\\ %C(#c0d6de)%s\\ %C(#17b062)%d"
+	ldd   = log --all --graph --date=format:'%a %d %b %Y %I:%M %p' --pretty=format:"%C(#0080ff)%h\\ %C(#cd9a00)<%an>\\ %C(#888888)(%cd)\\ %C(#c0d6de)%s\\ %C(#17b062)%d"
+	l     = log --graph --date=format:'%a %d %b %Y' --pretty=format:"%C(#0080ff)%h\\ %C(#cd9a00)<%an>\\ %C(#888888)(%cd)\\ %C(#c0d6de)%s\\ %C(#17b062)%d"
+	find  = log --all --pretty=format:"%C(#0080ff)%h\\ \\%C(#c0d6de)%s\\%C(#17b062)%d" --name-status --grep
+	stat  = !git diff --stat $(git merge-base HEAD \"main\")
+	fh    = log --follow -p --
+	lf    = log -p
+
+# Fetch
+	f = fetch --prune -v github         # verbose mode
+	fs = log github/main ^main      # show fetch updates
+
+# Branch
+	br = branch -av
+	be = branch --edit-description
+	show-unmerged-branches = branch --no-merged main
+	show-merged-branches = branch --merged main
+	delete-remote-branch = push -d github  #branch name
+	show-ahead = rev-list --count main...
+	# git push -f origin $old_commit_id:main         # change remote branch
+	# git reset --hard origin/<branch_name>            # force sync with remote
+	# git branch -m old-name new-name                  # rename branches
+	# git remote rename origin destination             # rename remote
+	# git remote set-url github git@github.com:afify/REPOSITORY.git # rename remote url
+
+# Remove Undo
+	r = rm -r                                                  # remove file
+	adddeleted = !git ls-files --deleted | xargs git add
+	unstage-all = reset
+	unstage-file = restore --staged
+	uncommit = reset --soft HEAD
+# 	forcerestore = !git reset --hard HEAD $1  && git clean -f
+# 	git reset --hard github/main
+
+# Track Ignore files dirs
+	untrack= rm -r --cached --ignore-unmatch
+	retrack = update-index --no-assume-unchanged
+	show-untracked = ls-files . --exclude-standard --others
+	show-ignored = ls-files . --ignored --exclude-standard --others
+# 	show-file = show 00c7250:sfm.c | vim - -n
+
+# interactive staging
+	addi = add --interactive
+
+# clean
+# 	k = git remote prune github
+# 	reflog expire --all --expire=now
+	k = gc --prune=now --aggressive

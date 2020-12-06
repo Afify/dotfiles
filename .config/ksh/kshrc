@@ -1,0 +1,106 @@
+#!/bin/ksh
+
+alias k='clear'
+alias du="du -sh"
+alias df="df -h"
+alias mv='mv -i'
+alias cp='cp -ir'
+alias rm='rm -i'
+alias mkdir='mkdir -p'
+alias xc='xclip -sel clip'
+alias less="less -IR"
+alias fonts="fc-list | sed 's/^.*: //' | awk -F: '{print $1}' | sort | uniq | less"
+alias lsb="dmesg | egrep '^(cd|wd|sd|fd). at ' | sort | uniq"
+alias sc="rsync -avzhe ssh --progress"
+alias cpp="rsync -avzhe --progress"
+alias lsuuid="ls -la /dev/disk/by-uuid/"
+[ "$(uname)" = "OpenBSD" ] && alias ulocate="doas /usr/libexec/locate.updatedb"
+[ "$(uname)" = "OpenBSD" ] && alias gr='grep -Inr' || alias gr='grep -Inr --color=always'
+
+# development
+[ "$(uname)" = "Linux" ] && valf='-s'
+alias val="valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all $valf"
+[ "$(uname)" = "OpenBSD" ] && alias sys="less /sys/sys/syscall.h" || alias sys="bat /usr/include/asm/unistd_64.h"
+[ "$(uname)" = "OpenBSD" ] && alias sys2="less /usr/src/sys/kern/syscalls.master"
+alias ob="objdump -D -M intel"
+alias rr="r2 -d -c aaa -c vv"
+alias reg="cat ~/.scripts/reg.txt"
+
+# downloads
+alias wgetf="wget --tries=100 --continue --content-disposition --trust-server-names -i"
+alias wgetw="wget -r -l inf"
+alias egyb=" cd ~/downloads && python /mnt/data/dev/archived/egybest_downloader/egybest_unix.py"
+
+# youtube
+yt="youtube-dl -i --add-metadata"
+alias ya="$yt -f bestaudio"
+alias yv4="$yt -f 'bestvideo[height<=480]+bestaudio/best[height<=480]'"
+alias yv7="$yt -f 'bestvideo[height<=720]+bestaudio/best[height<=720]'"
+alias yvp4="yv4 -o \"%(autonumber)s-%(title)s.%(ext)s\""
+alias yvp7="yv7 -o \"%(autonumber)s-%(title)s.%(ext)s\""
+
+# ls
+[ "$(uname)" = "OpenBSD" ] && alias ls='colorls -GA' || alias ls='ls --color=always -A'
+alias ll='ls -lh'
+
+# prompt
+[ "$(id -u)" = 0 ] && col="9m" || col="24m"
+export PS1="\[\033[38;5;$col\]\W \033[38;5;166m\]\$(git branch --show-current 2>/dev/null)\[\033[00m\] "
+
+# extract
+ex(){
+[ -f "$1" ] && case $1 in
+	*.tar.bz2) tar xjf          "$1";;
+	*.tar.gz)  tar xzf          "$1";;
+	*.tar.xz)  tar xf           "$1";;
+	*.tar.zst) tar -I zstd -xvf "$1";;
+	*.tar)     tar xf           "$1";;
+	*.tbz2)    tar xjf          "$1";;
+	*.tgz)     tar xzf          "$1";;
+	*.xz)      xz -d            "$1";;
+	*.bz2)     bunzip2          "$1";;
+	*.rar)     unrar x          "$1";;
+	*.gz)      gunzip           "$1";;
+	*.zip)     unzip            "$1";;
+	*.7z)      7z x             "$1";;
+	*.Z)       uncompress       "$1";;
+	*) echo "'$1' cannot be extracted.";;
+	esac
+}
+
+cf(){
+	cp /mnt/data/dev/openbsd_clang-format/.clang-format .
+	clang-format -style=file -i $1
+	rm -f .clang-format
+}
+
+conv_axr()	{ printf "%s" "$1" | rev | xxd -u -c 8 -ps; }									# convert ascii to hex in reverse
+conv_ax()	{ echo -n "$1" | xxd -p -u; }										# convert ascii to hex
+conv_dx()	{ echo "ibase=A;obase=16;$1" | bc; }									# convert decimal to hex
+conv_da()	{ printf "\\$(printf %o $1)\n"; }									# convert decimal to ascii
+conv_xa()	{ echo -n "$1" | xxd -p -r -u; }									# convert hex to ascii
+conv_xd()	{ upper=$(echo "$1" | tr -d ' ' | tr '[:lower:]' '[:upper:]'); echo "ibase=16;obase=A;$upper" | bc; }	# convert hex to decimal
+conv_xdouble()	{ python3 -c "import struct;print(\"%.30f\" % struct.unpack(\"d\", struct.pack(\"Q\", 0x$1 )))"; }	# convert hex to double
+conv_xfloat()	{ python3 -c "import struct;print(\"%.30f\" % struct.unpack(\"f\", struct.pack(\"I\", 0x$1 )))"; }	# convert hex to float
+conv_doublex()	{ python3 -c "import struct;print(\"%#x\" % struct.unpack(\"Q\", struct.pack(\"d\", $1 )))"; }		# convert double to hex
+conv_floatx()	{ python3 -c "import struct;print(\"%#x\" % struct.unpack(\"I\", struct.pack(\"f\", $1 )))"; }		# convert float to hex
+conv_time()	{ date "+%F %R:%S" -d @$1; }										# convert unix timestamp to date hours minutes
+
+g() { gr "$1" "$2" | less; }                     # grep recursive with less
+
+strace(){
+	ktrace -tc "$1"
+	kdump | less
+}
+
+comp(){
+	dir=$(basename "$1")
+	[ -f "$1" ] || [ -d "$1" ] && tar -czvf "$dir.tar.gz" -C "$1/.." "$dir"
+}
+
+fixp(){
+	[ -f "$1" ] || [ -d "$1" ] &&
+		sudo sh -c "find \"$1\" -type d -exec chmod 700 {} \;
+		find \"$1\" -type f -exec chmod 600 {} \;
+		chown -R $USER \"$1\" && chgrp -R $USER \"$1\" "
+}

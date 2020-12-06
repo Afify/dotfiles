@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# save_at="/mnt/data/recorded_screen"
+save_at="/home/hassan/recorded_screen"
+time_date=$(date +'%Y_%m_%d_%H_%M_%S')
+# fullscreen=1
+frate="25"
+# frate="60"
+hide_mouse="-draw_mouse 0"
+encoding="libx264 -preset ultrafast"
+# encoding="ffvhuff"
+ms=$(xrandr --current | grep "*" | uniq | awk '{print $1}')
+mh=$(echo "$ms" | awk -Fx '{print $1}')
+mw=$(echo "$ms" | awk -Fx '{print $2}')
+hms="$(( $mh / 2))x$mw"
+is_running=$(pgrep -f "ffmpeg -f" | wc -l)
+
+[ -d "$save_at" ] || mkdir "$save_at"
+[ $fullscreen -eq 1 ] && monitor_size=$ms || monitor_size=$hms
+
+if [ "$is_running" -eq 0 ]; then
+# 	ffmpeg -f x11grab -video_size $monitor_size -framerate $frate \
+# 		$hide_mouse -i $DISPLAY -c:v $encoding $save_at/$time_date.mkv
+
+ffmpeg \
+-f x11grab \
+-video_size $monitor_size \
+-framerate $frate \
+$hide_mouse \
+-i $DISPLAY \
+-c:v $encoding \
+-crf 21 \
+-pix_fmt yuv420p \
+-maxrate 5000K \
+-bufsize 5000K \
+-vf 'scale=if(gte(iw\,ih)\,min(1920\,iw)\,-2):if(lt(iw\,ih)\,min(1920\,ih)\,-2)' \
+-movflags \
++faststart \
+-c:a aac \
+-b:a 160k \
+$save_at/$time_date.mp4
+
+else
+	pkill ffmpeg
+fi
+
+# ffmpeg
+# -i input.avi
+# -c:v libx264
+# -crf 21
+# -preset faster
+# -pix_fmt yuv420p
+# -maxrate 5000K
+# -bufsize 5000K
+# -vf 'scale=if(gte(iw\,ih)\,min(1920\,iw)\,-2):if(lt(iw\,ih)\,min(1920\,ih)\,-2)'
+# -movflags
+# +faststart
+# -c:a aac
+# -b:a 160k
+# output.mp4

@@ -1,0 +1,8 @@
+e asm.describe = true
+e cfg.sandbox = false
+e cmd.stack = true
+e scr.utf8 = true
+e scr.utf8.curvy = true
+eco ogray
+# eco ayu
+# eco xvilka

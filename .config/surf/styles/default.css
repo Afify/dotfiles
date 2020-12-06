@@ -1,0 +1,31 @@
+html,pre,textarea,body,input,td,tr,p,div {
+	background-color: #000 !important;
+	background-image: none !important;
+	color: #777 !important;
+}
+
+code {
+background-color: #111 !important;
+background-image: none !important;
+color: orange !important;
+}
+
+h1,h2,h3,h4 {
+	color: #999 !important;
+}
+
+a {
+	color: #0066cc !important;
+}
+
+a.post-tag, span.s-tag, a.pl8 {
+	background-color: #222 !important;
+}
+
+span.pln, span.pun {
+	color: #777 !important;
+}
+
+#bottom-result-container #spon_links     { display: none !important; }
+#bottom-result-container #sponsored_csa1 { display: none !important; }
+#bottom-result-container #sponsored_csa2 { display: none !important; }

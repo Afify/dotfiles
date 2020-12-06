@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+# TODO if no internet 
+
+wifi_icon="直"
+eth_icon=""
+other_icon="禍"
+bpm=1048576 # 1024*1024
+up_interfaces=$(ifconfig | grep "UP,BROADCAST,RUNNING" |\
+	sed 's/://' | awk '{print $1}')
+up_type=
+ssid_strength=
+
+check_type(){
+	case $(uname) in
+		Linux) case $1 in
+				wlp*) up_type=wlan  ;;
+				enp*) up_type=eth   ;;
+				*)    up_type=other ;;
+			esac ;;
+		OpenBSD) up_type=$(ifconfig $1 | grep "groups" | awk '{print $2}') ;;
+	esac
+}
+
+get_ssid_strength(){
+	if [[ "$up_type"  == "wlan" ]]; then
+		case $(uname) in
+			Linux)
+			wifi_ssid=$(iw dev $1 link | grep SSID | cut -d " " -f 2-)
+			wifi_strength=$(grep "^\s*w" /proc/net/wireless |\
+			awk '{print int($3 * 100 / 70) "%"}')
+			ssid_strength='\n'$wifi_ssid' '$wifi_strength;;
+
+			OpenBSD) ssid_strength=$(echo "$int" | grep join |\
+				awk '{print "\n"$3"\t"int((-0.0154*$8*$8)-(0.3794*$8)+98.182)"%"}');;
+			esac
+		else
+			ssid_strength=
+	fi
+
+}
+
+print_status(){
+	for each_interface in $up_interfaces; do
+# 		case $(uname) in
+# 			Linux) total_in=$(
+# 				cat /sys/class/net/$each_interface/statistics/rx_bytes);;
+# 			OpenBSD) total_in=$(netstat -b -I $each_interface |\
+# 				egrep "[a-z0-9]{2}:" | awk '{print $5}');;
+# 		esac
+		check_type $each_interface
+		case $up_type in
+			egress) icon=$other_icon ;;
+			wlan)   icon=$wifi_icon  ;;
+			eth)    icon=$eth_icon   ;;
+			*)      icon=$other_icon ;;
+		esac
+# 		in_sum=$(($total_in / $bpm))
+# 		result+=$icon' '$in_sum' '
+		result+=$icon' '
+	done
+	echo $result
+}
+
+notify_status(){
+	for each_interface in $up_interfaces; do
+		int=$(ifconfig $each_interface)
+		ip=$(echo "$int" | grep 'inet ' | awk '{print $2}')
+		check_type $each_interface
+		get_ssid_strength $each_interface
+		result+="$up_type\t($each_interface)$ssid_strength\n$ip\n\n"
+	done
+	notify-send "Network details" "$result"
+}
+
+print_ips(){
+	[ "$(uname)" = "Linux" ] && ifconfig | grep -A1 "$up_interfaces" | awk '/inet/ {print $2}'
+	[ "$(uname)" = "OpenBSD" ] && ifconfig | grep -A7 "$up_interfaces" | awk '/inet/ {print $2}'
+}
+
+case $1 in
+	notify) notify_status ;;
+	ips)    print_ips     ;;
+	*)      print_status  ;;
+esac

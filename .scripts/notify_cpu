@@ -1,0 +1,2 @@
+#!/bin/sh
+notify-send "CPU" "$(ps axch -o cmd:15,%cpu --sort=-%cpu | head)" -t 10000
