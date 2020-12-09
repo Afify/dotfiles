@@ -1,15 +1,15 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-# TODO if no internet 
+# TODO if no internet
 
 wifi_icon="直"
 eth_icon=""
 other_icon="禍"
-bpm=1048576 # 1024*1024
 up_interfaces=$(ifconfig | grep "UP,BROADCAST,RUNNING" |\
 	sed 's/://' | awk '{print $1}')
 up_type=
 ssid_strength=
+result=
 
 check_type(){
 	case $(uname) in
@@ -23,7 +23,7 @@ check_type(){
 }
 
 get_ssid_strength(){
-	if [[ "$up_type"  == "wlan" ]]; then
+	if [ "$up_type"  = "wlan" ]; then
 		case $(uname) in
 			Linux)
 			wifi_ssid=$(iw dev $1 link | grep SSID | cut -d " " -f 2-)
@@ -57,7 +57,7 @@ print_status(){
 		esac
 # 		in_sum=$(($total_in / $bpm))
 # 		result+=$icon' '$in_sum' '
-		result+=$icon' '
+		result=$result$icon' '
 	done
 	echo $result
 }
@@ -68,7 +68,7 @@ notify_status(){
 		ip=$(echo "$int" | grep 'inet ' | awk '{print $2}')
 		check_type $each_interface
 		get_ssid_strength $each_interface
-		result+="$up_type\t($each_interface)$ssid_strength\n$ip\n\n"
+		result=$result"$up_type\t($each_interface)$ssid_strength\n$ip\n\n"
 	done
 	notify-send "Network details" "$result"
 }

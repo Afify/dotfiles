@@ -1,0 +1,6 @@
+#!/bin/sh
+# replacment of passmenu
+
+path=$HOME/.password-store/
+chosen=$(ls $path | sed -r 's/(\.gpg|.gpg-id)//g' | dmenu -i -p "Pass " -l 10)
+if [ "$chosen" ]; then pass -c "$chosen"; fi

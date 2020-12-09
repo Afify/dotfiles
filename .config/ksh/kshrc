@@ -100,7 +100,7 @@ comp(){
 
 fixp(){
 	[ -f "$1" ] || [ -d "$1" ] &&
-		sudo sh -c "find \"$1\" -type d -exec chmod 700 {} \;
+		doas sh -c "find \"$1\" -type d -exec chmod 700 {} \;
 		find \"$1\" -type f -exec chmod 600 {} \;
 		chown -R $USER \"$1\" && chgrp -R $USER \"$1\" "
 }

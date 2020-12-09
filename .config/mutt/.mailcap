@@ -1,0 +1,10 @@
+text/plain; vim %s ;
+text/x-patch; vim %s ;
+text/html; firefox %s ; nametemplate=%s.html
+text/html; w3m -I %{charset} -T text/html; copiousoutput;
+image/*; sxiv %s ; copiousoutput
+video/*; mpv --quiet %s &; copiousoutput
+application/pdf; mupdf %s ;
+application/pgp-encrypted; gpg -d '%s'; copiousoutput;
+application/vnd.oasis.opendocument.spreadsheet; libreoffice %s;
+# application/x-tar-gz;
