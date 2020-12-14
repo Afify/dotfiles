@@ -1,7 +1,6 @@
 #!/bin/sh
 
-# save_at="/mnt/data/recorded_screen"
-save_at="/home/hassan/recorded_screen"
+save_at="/mnt/data/recorded_screen"
 time_date=$(date +'%Y_%m_%d_%H_%M_%S')
 # fullscreen=1
 frate="25"

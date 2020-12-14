@@ -1,7 +1,7 @@
 [user]
 	name = afify
 	email = hassan@afify.dev
-	signingkey = E7855210AD9062A0
+	signingkey = CBBC1F408F97EB2B
 
 [init]
 	defaultBranch = main

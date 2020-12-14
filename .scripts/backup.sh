@@ -28,7 +28,7 @@ check_default_dis(){
 }
 
 today=$(date +%Y_%m_%d)
-files=".ssh .password-store .scripts"
+files=".ssh .password-store"
 default_dis="/mnt/sd1/backups"
 check_default_dis
 of=$dis/home_$today.tar

@@ -18,8 +18,6 @@ set realname	= "Afify"
 set from	= "hassan@afify.dev"
 set sendmail	= "/bin/msmtp -a afify"
 set signature	= "~/.config/mutt/sig"
-set hdrs	= yes
-my_hdr		Return-Receipt-To: hassan@afify.dev
 
 unmailboxes *
 mailboxes =afify/Inbox
@@ -37,7 +35,6 @@ set attach_charset	= "utf-8"
 set wait_key		= no
 set ssl_force_tls	= yes
 set mbox_type		= Maildir
-set new_mail_command	= "notify-send 'New Email' '%n new messages, %u unread.' &"
 set delete
 set quit
 set thorough_search
@@ -46,12 +43,14 @@ unset confirmappend
 unset move
 unset mark_old
 unset beep_new
-set status_on_top # Status bar on top.
+set status_on_top
 
 # Sync and check intervals
-set read_inc	= 100
-set mail_check	= 0
-set timeout	= 3
+set read_inc		= 100
+set mail_check		= 0
+set timeout		= 3
+set sleep_time		= 0
+set connect_timeout	= 3
 
 # Compose View Options
 set use_envelope_from			# which from?
@@ -61,7 +60,7 @@ set askcc				# ask for CC:
 set fcc_attach				# save attachments with the body
 set forward_format = "Fwd: %s"		# format of subject when forwarding
 set forward_decode			# decode when forwarding
-set attribution = "%n wrote:\n"
+set attribution = "%n <%a> wrote:\n"
 set reply_to				# reply to Reply to: field
 set include				# include message in replies
 set forward_quote			# include message in forwards
@@ -96,15 +95,15 @@ set abort_nosubject=no
 alternative_order text/plain
 unignore from subject to cc date x-mailer x-url user-agent
 hdr_order from to cc date subject x-mailer user-agent
+send-hook . 'my_hdr Message-ID: <`date +"%Y%m%d%H%M%S"`.`sh -c "dd if=/dev/urandom bs=500 count=1 2>/dev/null | md5sum | dd if=/dev/stdin bs=10 count=1 2>/dev/null"`@`sh -c "dd if=/dev/urandom bs=500 count=1 2>/dev/null | md5sum | dd if=/dev/stdin bs=15 count=1 2>/dev/null"`>'
 
 # sidebar
 set sidebar_visible
 set sidebar_short_path
 set sidebar_folder_indent
-set sidebar_width		= 25
+set sidebar_width		= 20
 set sidebar_divider_char	= ' │ '
-set sidebar_indent_string	= '  ''
-set sidebar_format		= "%B %* [%?N?%N / ?%S]"
+set sidebar_format		= "%B%* [%N]"
 
 # GPG/PGP
 set pgp_sign_as			= `cat ~/.password-store/.gpg-id`
@@ -166,66 +165,40 @@ macro index,pager a \
 macro index,pager I \
 	"<save-message>+afify/Inbox<enter>" \
 	"move message to Inbox"
-macro index S "!mbsync -a<enter>" "Update through mbsync"
 macro index \Cf \
 	"<enter-command>unset wait_key<enter><shell-escape>read -p 'Enter a search term to find with notmuch: ' x; echo \$x >~/.cache/mutt_terms<enter><limit>~i \"\`notmuch search --output=messages \$(cat ~/.cache/mutt_terms) | head -n 600 | perl -le '@a=<>;s/\^id:// for@a;$,=\"|\";print@a' | perl -le '@a=<>; chomp@a; s/\\+/\\\\+/ for@a;print@a' \`\"<enter>" \
 	"show only messages matching a notmuch pattern"
 
 # theme
-color attachment	color109	color0
-color bold		color229	color0
-color error		color167	color0
-color hdrdefault	color246	color0
-color indicator		default		color233
-color markers		color243	color0
-color normal		color243	color0
-color quoted		color250	color0
-color quoted1		color108	color0
-color quoted2		color250	color0
-color quoted3		color108	color0
-color quoted4		color250	color0
-color quoted5		color108	color0
-color search		color0		color208
-color signature		color108	color0
-color status		color90		color232
-color tilde		color243	color0
-color tree		color243	color0
-color underline		color223	color239
-color index		color24		color0	"~N"
-color index		color108	color0	"~O"
-color index		color109	color0	"~P"
-color index		color214	color0	"~F"
-color index		color175	color0	"~Q"
-color index		color167	color0	"~="
-color index		color0		color0	"~T"
-color index		color167	color0	"~D"
-color header		color214	color0	"^(To:|From:|Date:|Cc:|Bcc)"
-color header		color2		color0	"^Subject:"
-color header		color108	color0	"^(User-Agent:|X-Spam-Status:)"
-color header		color108	color0	"^Received:"
-color body		color1		color0	"^(> )?-.*$"
-color body		color2		color0	"^(> )?\\+.*$"
-color body		color24		color0	"[a-zA-Z]{3,5}://[-a-zA-Z0-9@:%._\\+~#=/?&,;]+" # url
-color body		color24		color0	"[-a-z_0-9.\+%$]+@[-a-z_0-9.\+]+\\.[-a-z][-a-z]+" # email
-color body		color208	color0	"mailto:[-a-z_0-9.]+@[-a-z_0-9.]+"
-color body		color208	color0	"^-.*[Ff]orwarded [Mm]essage.*$"
-color body		color214	color0	"^-.*PGP.*-*"
-color body		color142	color0	"^.*Good signature from"
-color body		color167	color0	"^.*BAD.*signature from"
-color body		color167	color0	"^.*Problem signature from"
-color body		color167	color0	"^gpg: Can't.*$"
-color body		color214	color0	"^gpg: WARNING:.*$"
-color body		color167	color0	"^gpg: Note: This key has expired!"
-color body		color214	color0	"^gpg: There is no indication that the signature belongs to the owner."
-color body		color214	color0	"^gpg: can't handle these multiple signatures"
-color body		color214	color0	"^gpg: signature verification suppressed"
-color body		color214	color0	"^gpg: invalid node with packet of type"
-color sidebar_divider	color233	color0
-color sidebar_new	color24		color0
-color sidebar_indicator	color255	color0
-color sidebar_highlight	default		color233
-color compose header		color223	color0
-color compose security_encrypt	color175	color0
-color compose security_sign	color109	color0
-color compose security_both	color142	color0
-color compose security_none	color208	color0
+mono bold		bold
+mono error		bold
+mono indicator		reverse
+mono quoted		bold
+mono underline		underline
+
+color attachment	color254	color234
+color body		color29		default		"^(\\+){1}.*"
+color body		color89		default		"^(\-){1}.*"
+color body		color68		default		"^(\-){3}\ .*"
+color body		color68		default		"^(\\+){3}\ .*"
+color body		color68		default		"^index\ [a-z0-9]{8}\.\.[a-z0-9]{8}.*"
+color body		color68		default		"^@@.*"
+color body		color68		default		"^diff.*"
+color error		color160	color232
+color header		brightcolor240	color232	"^"
+color index		color37		color0		"~N"
+color index		color160	color0		"~D"
+color indicator		brightcolor230	color236
+color markers		color160	color254
+color message		color37		color232
+color normal		color241	color0
+color quoted		color33		color233
+# color quoted1		color37		color233
+# color quoted2		color136	color233
+# color quoted3		color160	color233
+# color quoted4		color166	color233
+color search		color61		color0
+color signature		color136	color0
+color status		color63		color232
+color tilde		color235	color232
+color tree		color136	color232

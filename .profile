@@ -23,6 +23,7 @@ export LESS_TERMCAP_so="$(printf '\33[1;44;37m')"
 export LESS_TERMCAP_se="$(printf '\33[0m')"
 export LESS_TERMCAP_us="$(printf '\33[38;5;166m')"
 export LESS_TERMCAP_ue="$(printf '\33[0m')"
+export LESS=-r
 
 if [ "$(uname -s)" = "Linux" ]; then
 	export HW=$(cat /sys/devices/virtual/dmi/id/sys_vendor /sys/devices/virtual/dmi/id/product_name)

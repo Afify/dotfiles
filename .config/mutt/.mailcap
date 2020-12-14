@@ -1,6 +1,6 @@
 text/plain; vim %s ;
 text/x-patch; vim %s ;
-text/html; firefox %s ; nametemplate=%s.html
+text/html; surf %s ; nametemplate=%s.html
 text/html; w3m -I %{charset} -T text/html; copiousoutput;
 image/*; sxiv %s ; copiousoutput
 video/*; mpv --quiet %s &; copiousoutput

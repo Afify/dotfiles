@@ -1,0 +1,33 @@
+#!/bin/sh
+
+[ "$(uname)" = "OpenBSD" ] && master=$(mixerctl -n outputs.master) \
+	&& left_master=$(echo "$master" | awk -F, '{print $1}')
+
+	inc_vol(){
+	case $(uname) in
+		Linux) pactl set-sink-volume 0 +5% ;;
+		OpenBSD) mixerctl outputs.master=$(($left_master + 10)) ;;
+	esac
+	}
+
+	dec_vol(){
+	case $(uname) in
+		Linux)  pactl set-sink-volume 0 -5% ;;
+		OpenBSD) mixerctl outputs.master=$(($left_master - 10)) ;;
+	esac
+	}
+
+	mute(){
+	case $(uname) in
+		Linux) pactl set-sink-mute 0 toggle ;;
+		OpenBSD) [ "$(mixerctl -n outputs.hp_sense)" = "plugged" ] \
+				&& mixerctl -t outputs.hp_mute \
+				|| mixerctl -t outputs.master.mute ;;
+	esac
+	}
+
+case $1 in
+	inc)    inc_vol    ;;
+	dec)    dec_vol    ;;
+	mute_t) mute       ;;
+esac
