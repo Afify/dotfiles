@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# gpgconf --kill gpg-agent
+# gpg2 --export 965AEAEBA391E4441D997BE1CBBC1F408F97EB2B > /mnt/usb1/public.key
+# gpg2 --export-secret-key 965AEAEBA391E4441D997BE1CBBC1F408F97EB2B > /mnt/usb1/private.key
+
+
 add_gpg_keys(){
 	all_keys=$(gpg2 --list-secret-keys --with-colons | awk -F: "/^sec.*\$/ {print \$5}")
 	for each_key in $all_keys

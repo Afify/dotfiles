@@ -1,0 +1,81 @@
+#!/bin/sh
+
+bluetoothctl power on
+bluetoothctl connect FC:A8:9A:57:A4:8A
+
+
+# doas usermod -a -G bluetooth hassan
+# ln -s /etc/sv/dbus		/var/service/
+# ln -s /etc/sv/bluetoothd	/var/service/
+# # rmmod btusb
+# # modprobe btusb
+# 
+# bluetoothctl power on
+# bluetoothctl agent on
+# bluetoothctl default-agent
+# bluetoothctl scan on
+# sudo apt install pulseaudio-module-bluetooth 
+# pulseaudio -k
+# pulseaudio --start
+# scan off
+# 
+# bluetooth power on
+# bluetooth scan on
+# 
+# device='FC:A8:9A:57:A4:8A'
+# device_sink='FC_A8_9A_57_A4_8A'
+# # device='70:BF:92:C8:67:C7'
+# # device_sink='70_BF_92_C8_67_C7'
+# device_name="JBL Headset"
+# 
+# force(){
+# 	pulseaudio -k
+# 	# usermod -a -G bluetooth $USER
+# 	# sv restart dbus
+# 	dmenu -P -p "sudo " | sudo -S sh -c\
+# 		"rfkill unblock bluetooth
+# 		modprobe -r btusb
+# 		modprobe btusb
+# 		sv up bluetoothd
+# 		sv restart bluetoothd"
+# 
+# # 		sudo rfkill block wlan && sudo modprobe -r btusb && sleep 10 && sudo modprobe btusb && systemctl --user restart pulseaudio && sudo systemctl restart bluetooth
+# # modprobe btusb ;sudo systemctl start bluetooth
+# 	}
+# 
+# check_bluetooth(){
+# 	bstatus=$(pgrep bluetoothd)
+# 	bl_s=$(rfkill -rn | awk '/bluetooth/ {print $4}')
+# 	if [ ! "$bstatus" ] || [ "$bl_s" != "unblocked" ]; then
+# 		force
+# 	fi
+# }
+# 
+# connect_device(){
+# 	is_connected=$(bluetoothctl info $device | awk '/Connected/ {print $2}')
+# 	if [ ! "$is_connected" = "yes" ]; then
+# 		bluetoothctl power off
+# 		bluetoothctl power on
+# 		bluetoothctl disconnect $device
+# 		bluetoothctl pair $device
+# 		bluetoothctl connect $device
+# 		bluetoothctl trust $device
+# 	fi
+# }
+# 
+# change=$(pacmd set-card-profile bluez_card.$device_sink a2dp_sink |\
+# 	grep -o "Failed")
+# if [ "$change" = "Failed" ]; then
+# 	force
+# 	jbl
+# else
+# 	pacmd set-default-sink bluez_sink.$device_sink.a2dp_sink
+# 	inputs=$(pacmd list-sink-inputs | awk '$1 == "index:" {print $2}')
+# 	for apps in $inputs; do
+# 		pacmd move-sink-input "$apps" bluez_sink.$device_sink.a2dp_sink
+# 	done
+# fi
+# 
+# # force
+# check_bluetooth
+# connect_device

@@ -60,11 +60,11 @@ set askcc				# ask for CC:
 set fcc_attach				# save attachments with the body
 set forward_format = "Fwd: %s"		# format of subject when forwarding
 set forward_decode			# decode when forwarding
+set forward_quote			# include message in forwards
+unset mime_forward			# forward attachments as part of body
 set attribution = "%n <%a> wrote:\n"
 set reply_to				# reply to Reply to: field
 set include				# include message in replies
-set forward_quote			# include message in forwards
-unset mime_forward			# forward attachments as part of body
 set text_flowed
 
 # status bar, date format, finding stuff etc.
@@ -78,9 +78,9 @@ set uncollapse_jump
 set sort		= threads
 set sort_aux		= reverse-last-date-received
 set user_agent		= no
-set date_format		= "%d.%m.%Y %H:%M"
+set date_format		= "%d/%m/%Y %H:%M"
 set status_chars	= " *%A"
-set index_format	= "%Z %{%d/%m} %-30.30F %-85.85s %-4.4c"
+set index_format	= "%Z %-20.20F %-85.85s %d%* %c"
 set reply_regexp	= "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
 set quote_regexp	= "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
 set send_charset	= "utf-8:iso-8859-1:us-ascii"
@@ -181,7 +181,7 @@ color body		color29		default		"^(\\+){1}.*"
 color body		color89		default		"^(\-){1}.*"
 color body		color68		default		"^(\-){3}\ .*"
 color body		color68		default		"^(\\+){3}\ .*"
-color body		color68		default		"^index\ [a-z0-9]{8}\.\.[a-z0-9]{8}.*"
+color body		color68		default		"^index\ [a-z0-9]+\.\.[a-z0-9]+.*"
 color body		color68		default		"^@@.*"
 color body		color68		default		"^diff.*"
 color error		color160	color232

@@ -10,27 +10,42 @@ set noswapfile
 set backspace=indent,eol,start
 set viminfo=
 set shortmess-=S
+set clipboard+=unnamedplus
 
 "==============================================================================
 " Plugins
 "==============================================================================
-source ~/.vim/comment.vim
+source ~/.config/nvim/comment.vim
 
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter'
-Plug 'maralla/completor.vim'
+" Plug 'maralla/completor.vim'
 Plug 'rhysd/vim-clang-format'
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'dart-lang/dart-vim-plugin'
+Plug 'neoclide/coc.nvim'
 Plug 'vim-syntastic/syntastic'
+Plug 'ghifarit53/tokyonight-vim'
 Plug 'ap/vim-css-color'
 call plug#end()
 
 "==============================================================================
 " Display
 "==============================================================================
-colorscheme minimal
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+set termguicolors
+set background=dark
+colorscheme tokyonight
+set number
+set foldmethod=syntax
+set colorcolumn=80,81
+autocmd FileType gitcommit set textwidth=72 colorcolumn=50,51,72,73
+autocmd FileType gitrebase set textwidth=63 colorcolumn=63,64
+autocmd BufRead *tmp/neomutt-* set textwidth=72 colorcolumn=72,73
+
 set list
-set listchars=tab:>—,nbsp:␣,trail:.
+" set listchars=tab:>—,nbsp:␣,trail:.
+set listchars=tab:├─,nbsp:␣,trail:.
 set tabstop=8
 set shiftwidth=8
 set noexpandtab    " Use tabs, not spaces
@@ -44,9 +59,11 @@ filetype plugin indent on
 " set noautoindent
 " set linebreak
 
-autocmd FileType python  set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent foldmethod=indent
+autocmd FileType python set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent foldmethod=indent
+autocmd FileType mail set spell spelllang=en_us
+autocmd FileType text set spell spelllang=en_us
 autocmd FileType nasm set autoindent foldmethod=indent
-autocmd FileType html,css set ts=4 sw=4
+autocmd FileType html,css,dart set ts=4 sw=4 noexpandtab
 autocmd FilterWritePre * if &diff | set foldcolumn=0 | endif
 
 "==============================================================================
@@ -57,16 +74,13 @@ noremap ; :
 " write to sudo files
 cnoremap w!! w !sudo tee % >/dev/null
 
-"copy to global clipboard
-vmap <C-c> y:call system("xclip -i -selection clipboard", getreg("\""))<cr>:call system("xclip -i", getreg("\""))<cr>
-
 " replace word with yanked
 nnoremap <C-p> cw<C-r>0<ESC>
 
-" paste
-nnoremap <C-c> :set invpaste paste?<CR>
-set pastetoggle=<C-c>
-set showmode
+" " paste
+" nnoremap <C-c> :set invpaste paste?<CR>
+" set pastetoggle=<C-c>
+" set showmode
 
 "Move lines up and down with controle + k or j
 nnoremap <silent> <C-j> :move +1 <CR>
@@ -99,15 +113,14 @@ noremap J o<esc>k
 noremap K O<esc>j
 
 " Go (start|end) of line
-noremap H ^
+noremap H 0
 noremap L $
 
 " Split
 nnoremap <Leader><CR> <Esc>:vsplit
-
-nnoremap <silent> <Leader>= :vertical resize +1<CR>
-nnoremap <silent> <Leader>- :vertical resize -1<CR>
-nnoremap <silent> <Leader>0 :vertical resize 87<CR>
+nnoremap <Leader>= :res +1<CR>
+nnoremap <Leader>- :res -1<CR>
+nnoremap <Leader>0 :res 34<CR>
 
 nnoremap <Left>  <C-w>h
 nnoremap <Down>  <C-w>j
@@ -143,6 +156,7 @@ nnoremap <Leader>n :lnext<CR>
 
 " Custom functions
 nnoremap <Leader>c :call Clean_file()<CR><CR>
+nnoremap <Leader>x :DartFmt<CR>:set ts=2<CR>:%retab!<CR>:set ts=4<CR>
 " nnoremap <Leader>c :call ClangFormat_func()<CR><CR>
 
 nnoremap <Leader>r :set rightleft<CR>
@@ -160,12 +174,35 @@ nnoremap <Leader>' i"<ESC>A"<ESC>l
 nnoremap <Leader>[ i[<ESC>lea]<ESC>l
 nnoremap <Leader>] i{<ESC>lea}<ESC>l
 
+inoremap {      {}<Left>
+inoremap {<CR>  {<CR>}<Esc>O
+inoremap {{     {
+inoremap {}     {}
+
+inoremap (      ()<Left>
+inoremap (<CR>  (<CR>)<Esc>O
+inoremap ((     (
+inoremap ()     ()
+
+inoremap [      []<Left>
+inoremap [<CR>  [<CR>]<Esc>O
+inoremap [[     [
+inoremap []     []
+
 noremap Q @q
 noremap <Leader>v @e
 
 " hex
 nnoremap <Leader>h :%!xxd<CR>
 nnoremap <Leader>H :%!xxd -r<CR>
+
+" flutter
+" nnoremap <leader>ff :FlutterEmulatorsLaunch Pixel_3a_API_30_x86<cr>:FlutterRun --enable-software-rendering<cr>
+nnoremap <leader>fe :CocCommand flutter.emulators<cr><cr>
+nnoremap <leader>ff :CocCommand flutter.run<cr>
+nnoremap <leader>fd :CocCommand flutter.dev.openDevLog<cr>
+nnoremap <leader>fq :CocCommand flutter.dev.quit<cr>
+nnoremap <leader>fr :CocCommand flutter.dev.hotRestart<cr>
 
 "==============================================================================
 " Status Line
@@ -281,17 +318,61 @@ augroup END
 "==============================================================================
 " Auto Completor
 "==============================================================================
-let g:completor_auto_trigger = 1
-let g:completor_clang_binary = '/usr/bin/clang'
-let g:completor_nasm_omni_trigger = '/bin/nasm'
-let g:completor_complete_options = 'menuone,noselect,preview'
+" TextEdit might fail if hidden is not set.
+set hidden
 
-set dictionary+="~/.vim/dict/text.dict"
-au FileType * execute 'setlocal dict+=~/.vim/dict/'.&filetype.'.dict'
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
 
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <C-f> <C-X><C-K>
+" Give more space for displaying messages.
+" set cmdheight=2
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+\ pumvisible() ? "\<C-n>" :
+\ <SID>check_back_space() ? "\<TAB>" :
+\ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+let col = col('.') - 1
+return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+inoremap <silent><expr> <c-space> coc#refresh()
+else
+inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+\: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" let g:completor_auto_trigger = 1
+" let g:completor_clang_binary = '/usr/bin/clang'
+" let g:completor_nasm_omni_trigger = '/bin/nasm'
+" let g:completor_complete_options = 'menuone,noselect,preview'
+" let g:lsc_auto_map = v:true
+"
+" set dictionary+="~/.vim/dict/text.dict"
+" au FileType * execute 'setlocal dict+=~/.vim/dict/'.&filetype.'.dict'
+"
+" inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" inoremap <C-f> <C-X><C-K>
 
 "==============================================================================
 " ClangFormat function
@@ -315,8 +396,9 @@ function! Clean_file()
 	" Remove more than 2 empty lines
 	" Remove empty comment lines
 	" TODO remove 2 spaces between words
-	\%s/^ \+//e |
-	%s/ \+$//e |
+	%s/^ \+//e |
+	\%s/^ \+\t/\t/e |
+	\%s/ \+$//e |
 	\%s/^\/\/$//e |
 	\%s/\t\+\n//e |
 	\%s/\t \+/\t/e |

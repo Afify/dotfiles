@@ -7,4 +7,6 @@ exec xsetroot -solid black &
 exec slstatus &
 exec setxkbmap -option caps:none &
 exec xbanish -m ne &
+#exec xinput set-prop "SynPS/2 Synaptics TouchPad" 357 1
+#exec xinput set-prop "SynPS/2 Synaptics TouchPad" 337 1
 exec dwm

@@ -7,6 +7,7 @@ ln -s /home/hassan/.vim		/root/.vim
 ln -s /mnt/data/todo.txt	/home/hassan/
 
 if [ "$(uname)" = "Linux" ]; then
+	ln -s /home/hassan/android-studio/bin/studio.sh /usr/local/bin/android-studio
 	ln -fs /bin/clang		/bin/cc
 	ln -fs /bin/ld.lld		/bin/ld
 	ln -s /etc/sv/wpa_supplicant	/var/service/

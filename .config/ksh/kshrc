@@ -14,8 +14,16 @@ alias lsb="dmesg | egrep '^(cd|wd|sd|fd). at ' | sort | uniq"
 alias sc="rsync -avzhe ssh --progress"
 alias cpp="rsync -avzhe --progress"
 alias lsuuid="ls -la /dev/disk/by-uuid/"
+if [ "$(uname)" = "Linux" ]; then
+	alias wifi="doas sv restart dhcpcd && wpa_cli -i wlp62s0 reconfigure"
+	alias xi="doas xbps-install"
+	alias xr="doas xbps-remove"
+	alias xq="xbps-query -Rs"
+fi
+
+[ "$(uname)" = "Linux" ] && alias grep="grep --color=always"
+alias gr='grep -Inr'
 [ "$(uname)" = "OpenBSD" ] && alias ulocate="doas /usr/libexec/locate.updatedb"
-[ "$(uname)" = "OpenBSD" ] && alias gr='grep -Inr' || alias gr='grep -Inr --color=always'
 
 # development
 [ "$(uname)" = "Linux" ] && valf='-s'

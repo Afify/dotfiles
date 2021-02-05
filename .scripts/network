@@ -57,9 +57,9 @@ print_status(){
 		esac
 # 		in_sum=$(($total_in / $bpm))
 # 		result+=$icon' '$in_sum' '
-		result=$result$icon' '
+		result=$result$icon
 	done
-	echo $result
+	echo " $result "
 }
 
 notify_status(){
