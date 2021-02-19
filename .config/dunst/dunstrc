@@ -3,7 +3,7 @@ bounce_freq = 0
 browser = /usr/bin/firefox -new-tab
 dmenu = /usr/bin/dmenu -p dunst:
 follow = none
-font = Mono 12
+font = Terminus 12
 format = "<span color='#00875f' font='14'><b>%s</b></span>\n%b\n%p"
 frame_color = "#8EC07C"
 frame_width = 2
@@ -43,13 +43,13 @@ history   = ctrl+grave
 background  = "#191311"
 foreground  = "#3B7C87"
 frame_color = "#3B7C87"
-timeout     = 2
+timeout     = 5
 
 [urgency_normal]
 background  = "#111111"
 foreground  = "#777777"
 frame_color = "#55505c"
-timeout     = 2
+timeout     = 5
 
 [urgency_critical]
 background  = "#191311"

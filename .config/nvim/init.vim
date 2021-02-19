@@ -154,10 +154,9 @@ nnoremap <Leader>a :SyntasticCheck<CR>
 nnoremap <Leader>A :SyntasticToggleMode<CR>
 nnoremap <Leader>n :lnext<CR>
 
-" Custom functions
-nnoremap <Leader>c :call Clean_file()<CR><CR>
-nnoremap <Leader>x :DartFmt<CR>:set ts=2<CR>:%retab!<CR>:set ts=4<CR>
-" nnoremap <Leader>c :call ClangFormat_func()<CR><CR>
+" Format file 
+autocmd FileType c    nnoremap <Leader>x :ClangFormat<CR>
+autocmd FileType dart nnoremap <Leader>x :DartFmt<CR>:set ts=2<CR>:%retab!<CR>:set ts=4<CR>
 
 nnoremap <Leader>r :set rightleft<CR>
 nnoremap <Leader>R :set norightleft<CR>
@@ -285,6 +284,48 @@ let g:syntastic_style_warning_symbol = '!'
 " clang format
 "==============================================================================
 let g:clang_format#detect_style_file = 1
+let g:clang_format#code_style = "WebKit"
+let g:clang_format#style_options = {
+    \ "AlignAfterOpenBracket": "DontAlign",
+    \ "AlignConsecutiveAssignments": "false",
+    \ "AlignConsecutiveDeclarations": "false",
+    \ "AlignConsecutiveMacros": "false",
+    \ "AlignEscapedNewlines": "Left",
+    \ "AlignOperands": "false",
+    \ "AlignTrailingComments": "false",
+    \ "AllowAllParametersOfDeclarationOnNextLine": "false",
+    \ "AllowShortBlocksOnASingleLine": "false",
+    \ "AllowShortCaseLabelsOnASingleLine": "false",
+    \ "AllowShortFunctionsOnASingleLine": "InlineOnly",
+    \ "AllowShortIfStatementsOnASingleLine": "false",
+    \ "AllowShortLoopsOnASingleLine": "false",
+    \ "AlwaysBreakAfterReturnType": "TopLevelDefinitions",
+    \ "AlwaysBreakBeforeMultilineStrings": "false",
+    \ "AlwaysBreakTemplateDeclarations": "MultiLine",
+    \ "BinPackArguments": "true",
+    \ "BinPackParameters": "true",
+    \ "BreakBeforeBinaryOperators": "None",
+    \ "BreakBeforeBraces": "WebKit",
+    \ "BreakBeforeTernaryOperators": "false",
+    \ "BreakStringLiterals": "false",
+    \ "ColumnLimit": 80,
+    \ "CompactNamespaces": "true",
+    \ "ContinuationIndentWidth": 4,
+    \ "DerivePointerAlignment": "false",
+    \ "DisableFormat": "false",
+    \ "IncludeBlocks": "Regroup",
+    \ "IndentCaseLabels": "false",
+    \ "IndentPPDirectives": "None",
+    \ "IndentWidth": 8,
+    \ "KeepEmptyLinesAtTheStartOfBlocks": "true",
+    \ "Language": "Cpp",
+    \ "NamespaceIndentation": "None",
+    \ "PenaltyBreakBeforeFirstCallParameter": 1000,
+    \ "PointerAlignment": "Right",
+    \ "SortIncludes": "true",
+    \ "SpaceAfterCStyleCast": "false",
+    \ "TabWidth": 8,
+    \ "UseTab": "Always"}
 
 "==============================================================================
 " git
@@ -373,15 +414,6 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
 " inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " inoremap <C-f> <C-X><C-K>
-
-"==============================================================================
-" ClangFormat function
-"==============================================================================
-function! ClangFormat_func()
-	:!cp /mnt/data/dev/openbsd_clang-format/.clang-format .
-	:ClangFormat<CR><CR>
-endfunction
-" 	:!rm -f .clang-format
 
 "==============================================================================
 " Remove characters function
