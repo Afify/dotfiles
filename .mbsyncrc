@@ -1,7 +1,7 @@
 IMAPAccount afify
 Host mail.privateemail.com
 User hassan@afify.dev
-PassCmd "pass privateemail.com:afify.dev"
+PassCmd "pass privateemail"
 SSLType IMAPS
 SSLVersions TLSv1.2
 
