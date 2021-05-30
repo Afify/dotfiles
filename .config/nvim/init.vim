@@ -55,38 +55,27 @@ set wildmode=list:full,full
 set ignorecase
 set smartcase
 set smartindent
-filetype plugin indent on
+filetype indent on
+" filetype plugin indent on
 " set noautoindent
 " set linebreak
 
 autocmd FileType python set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent foldmethod=indent
 autocmd FileType mail set spell spelllang=en_us
 autocmd FileType text set spell spelllang=en_us
-autocmd FileType nasm set autoindent foldmethod=indent
-autocmd FileType html,css,dart set ts=4 sw=4 noexpandtab
+autocmd FileType nasm,php set autoindent foldmethod=indent
+autocmd FileType html,css,dart,php set ts=4 sw=4 noexpandtab
 autocmd FilterWritePre * if &diff | set foldcolumn=0 | endif
+" autocmd BufWritePre *.c ClangFormat
 
 "==============================================================================
 " Keymaping
 "==============================================================================
 noremap ; :
-
-" write to sudo files
 cnoremap w!! w !sudo tee % >/dev/null
-
-" replace word with yanked
 nnoremap <C-p> cw<C-r>0<ESC>
-
-" " paste
-" nnoremap <C-c> :set invpaste paste?<CR>
-" set pastetoggle=<C-c>
-" set showmode
-
-"Move lines up and down with controle + k or j
 nnoremap <silent> <C-j> :move +1 <CR>
 nnoremap <silent> <C-k> :move -2 <CR>
-
-"Disable keys in Normal mode
 no <Up>        <Nop>
 no <Down>      <Nop>
 no <Left>      <Nop>
@@ -96,10 +85,7 @@ no <PageUp>    <Nop>
 no <PageDown>  <Nop>
 no <BackSpace> <Nop>
 no <F1>        <Nop>
-" no q           <Nop>
 no Q           <Nop>
-
-"Disable keys in Insert mode
 ino <Up>       <Nop>
 ino <Down>     <Nop>
 ino <PageUp>   <Nop>
@@ -107,21 +93,15 @@ ino <PageDown> <Nop>
 ino <End>      <Nop>
 ino <Home>     <Nop>
 ino <F1>       <Nop>
-
-" Add new line
+vno u          <Nop>
 noremap J o<esc>k
 noremap K O<esc>j
-
-" Go (start|end) of line
 noremap H 0
 noremap L $
-
-" Split
 nnoremap <Leader><CR> <Esc>:vsplit
 nnoremap <Leader>= :res +1<CR>
 nnoremap <Leader>- :res -1<CR>
 nnoremap <Leader>0 :res 34<CR>
-
 nnoremap <Left>  <C-w>h
 nnoremap <Down>  <C-w>j
 nnoremap <Up>    <C-w>k
@@ -155,8 +135,9 @@ nnoremap <Leader>A :SyntasticToggleMode<CR>
 nnoremap <Leader>n :lnext<CR>
 
 " Format file 
-autocmd FileType c    nnoremap <Leader>x :ClangFormat<CR>
-autocmd FileType dart nnoremap <Leader>x :DartFmt<CR>:set ts=2<CR>:%retab!<CR>:set ts=4<CR>
+autocmd FileType c        nnoremap <Leader>x :ClangFormat<CR>
+autocmd FileType php,html nnoremap <Leader>x :call TrimWhiteSpace()<CR>:set ts=4<CR>:%retab!<CR>:set ts=4<CR><ESC>1GVG=<CR>
+autocmd FileType dart     nnoremap <Leader>x :DartFmt<CR>:set ts=2<CR>:%retab!<CR>:set ts=4<CR>
 
 nnoremap <Leader>r :set rightleft<CR>
 nnoremap <Leader>R :set norightleft<CR>
@@ -172,21 +153,6 @@ nnoremap <Leader>; i"<ESC>lea"<ESC>l
 nnoremap <Leader>' i"<ESC>A"<ESC>l
 nnoremap <Leader>[ i[<ESC>lea]<ESC>l
 nnoremap <Leader>] i{<ESC>lea}<ESC>l
-
-inoremap {      {}<Left>
-inoremap {<CR>  {<CR>}<Esc>O
-inoremap {{     {
-inoremap {}     {}
-
-inoremap (      ()<Left>
-inoremap (<CR>  (<CR>)<Esc>O
-inoremap ((     (
-inoremap ()     ()
-
-inoremap [      []<Left>
-inoremap [<CR>  [<CR>]<Esc>O
-inoremap [[     [
-inoremap []     []
 
 noremap Q @q
 noremap <Leader>v @e
@@ -214,7 +180,7 @@ set statusline=\ %F%#StatusLine_g#\ %m%#StatusLine_r#\ %r%*%=
 set statusline+=%y\ %{&encoding}\ %{&fileformat}\ %c
 
 " Warnings
-set statusline+=%#StatusLine_o#
+set statusline+=%#Error#
 set statusline+=%{StatuslineTabWarning()}
 set statusline+=%{StatuslineTrailingSpaceWarning()}
 set statusline+=%*
@@ -284,48 +250,6 @@ let g:syntastic_style_warning_symbol = '!'
 " clang format
 "==============================================================================
 let g:clang_format#detect_style_file = 1
-let g:clang_format#code_style = "WebKit"
-let g:clang_format#style_options = {
-    \ "AlignAfterOpenBracket": "DontAlign",
-    \ "AlignConsecutiveAssignments": "false",
-    \ "AlignConsecutiveDeclarations": "false",
-    \ "AlignConsecutiveMacros": "false",
-    \ "AlignEscapedNewlines": "Left",
-    \ "AlignOperands": "false",
-    \ "AlignTrailingComments": "false",
-    \ "AllowAllParametersOfDeclarationOnNextLine": "false",
-    \ "AllowShortBlocksOnASingleLine": "false",
-    \ "AllowShortCaseLabelsOnASingleLine": "false",
-    \ "AllowShortFunctionsOnASingleLine": "InlineOnly",
-    \ "AllowShortIfStatementsOnASingleLine": "false",
-    \ "AllowShortLoopsOnASingleLine": "false",
-    \ "AlwaysBreakAfterReturnType": "TopLevelDefinitions",
-    \ "AlwaysBreakBeforeMultilineStrings": "false",
-    \ "AlwaysBreakTemplateDeclarations": "MultiLine",
-    \ "BinPackArguments": "true",
-    \ "BinPackParameters": "true",
-    \ "BreakBeforeBinaryOperators": "None",
-    \ "BreakBeforeBraces": "WebKit",
-    \ "BreakBeforeTernaryOperators": "false",
-    \ "BreakStringLiterals": "false",
-    \ "ColumnLimit": 80,
-    \ "CompactNamespaces": "true",
-    \ "ContinuationIndentWidth": 4,
-    \ "DerivePointerAlignment": "false",
-    \ "DisableFormat": "false",
-    \ "IncludeBlocks": "Regroup",
-    \ "IndentCaseLabels": "false",
-    \ "IndentPPDirectives": "None",
-    \ "IndentWidth": 8,
-    \ "KeepEmptyLinesAtTheStartOfBlocks": "true",
-    \ "Language": "Cpp",
-    \ "NamespaceIndentation": "None",
-    \ "PenaltyBreakBeforeFirstCallParameter": 1000,
-    \ "PointerAlignment": "Right",
-    \ "SortIncludes": "true",
-    \ "SpaceAfterCStyleCast": "false",
-    \ "TabWidth": 8,
-    \ "UseTab": "Always"}
 
 "==============================================================================
 " git
@@ -337,7 +261,7 @@ let g:gitgutter_map_keys = 0
 "==============================================================================
 " Folding
 "==============================================================================
-" set nofen
+set nofen
 set foldnestmax=1
 set foldmethod=syntax
 set fillchars=""
@@ -418,6 +342,11 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
 "==============================================================================
 " Remove characters function
 "==============================================================================
+function TrimWhiteSpace()
+	%s/\s\+$//e
+	''
+endfunction
+
 function! Clean_file()
 	" Save cursor line
 	let save_pos = getpos(".")

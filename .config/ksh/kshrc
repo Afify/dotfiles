@@ -39,6 +39,7 @@ alias ll='ls -lh'
 alias gr='grep -Inr'
 alias val="valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all $valf"
 alias vall="val --log-file=val.log"
+alias spp="splint -checks +posixlib +matchanyintegral +enumint -nullpass -nullret ./util.c -DVERSION=\"VERSION\""
 alias ob="objdump -D -M intel"
 alias rr="r2 -d -c aaa -c vv"
 alias reg="cat ~/.scripts/reg.txt"
@@ -99,8 +100,10 @@ conv_floatx()	{ python3 -c "import struct;print(\"%#x\" % struct.unpack(\"I\", s
 conv_time()	{ date "+%F %R:%S" -d @$1; }										# convert unix timestamp to date hours minutes
 
 g() { gr "$1" "$2" | less; }                     # grep recursive with less
+mkcd(){ mkdir "$1" && cd "$1"; }
 
 ostrace(){
+	[ "$(uname)" = "OpenBSD" ] || echo "OpenBSD only" && return 0;
 	ktrace -tc "$1"
 	kdump | less
 }

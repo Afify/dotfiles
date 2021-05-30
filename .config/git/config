@@ -78,7 +78,8 @@
 	remotes = remote -v
 
 # Merge
-	m = merge
+# 	m = merge
+	m = merge --no-commit --no-ff
 	mf = merge FETCH_HEAD
 	ms = merge -squash
 	chp = cherry-pick -e #hash..#otherhashrange # choose a commit from one branch and apply it onto another
@@ -128,7 +129,7 @@
 	ll    = log --all --graph --pretty=format:"%C(#0080ff)%h\\ %C(#cd9a00)<%an>\\ %C(#c0d6de)%s\\ %C(#17b062)%d"
 	lgpg  = log --all --graph --pretty=format:"%C(#0080ff)%h\\ %C(#cd9a00)%G?\\ \\%C(#c0d6de)%s\\%C(#17b062)%d"
 	ld    = log --all --graph --date=format:'%a %d %b %Y' --pretty=format:"%C(#0080ff)%h\\ %C(#cd9a00)<%an>\\ %C(#888888)(%cd)\\ %C(#c0d6de)%s\\ %C(#17b062)%d"
-	ldd   = log --all --graph --date=format:'%a %d %b %Y %I:%M %p' --pretty=format:"%C(#0080ff)%h\\ %C(#cd9a00)<%an>\\ %C(#888888)(%cd)\\ %C(#c0d6de)%s\\ %C(#17b062)%d"
+	ldd   = log --all --graph --date=format:'%a %d %b %Y %I:%M %p' --pretty=format:"%C(#0080ff)%h\\ %C(#cd9a00)<%an>\\ %C(#17b062)<%ae>\\ %C(#888888)(%cd)\\ %C(#c0d6de)%s\\ %C(#17b062)%d"
 	l     = log --graph --date=format:'%a %d %b %Y' --pretty=format:"%C(#0080ff)%h\\ %C(#cd9a00)<%an>\\ %C(#888888)(%cd)\\ %C(#c0d6de)%s\\ %C(#17b062)%d"
 	find  = log --all --pretty=format:"%C(#0080ff)%h\\ \\%C(#c0d6de)%s\\%C(#17b062)%d" --name-status --grep
 	stat  = !git diff --stat $(git merge-base HEAD \"main\")
