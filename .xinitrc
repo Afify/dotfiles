@@ -1,5 +1,8 @@
 #!/bin/sh
 
+hdmi_active=$(xrandr | grep "^HDMI.* connected")
+[ -n "$hdmi_active" ] && xrandr --output DP-0  --off && \
+	xrandr --output "$hdmi_active" --auto
 exec xbacklight -set 20 &
 exec wsconsctl keyboard.backlight=0 &
 exec redshift -P -O 3000 -m randr &

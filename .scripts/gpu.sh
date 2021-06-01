@@ -1,6 +1,6 @@
 #!/bin/sh
 
-max_mem="400"
+max_mem="700"
 max_temp="52"
 max_gpu="25"
 

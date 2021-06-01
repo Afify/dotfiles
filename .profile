@@ -1,8 +1,8 @@
 #!/bin/sh
 
 umask 077
-export EDITOR=vim
-export VISUAL=vim
+export EDITOR=nvim
+export VISUAL=nvim
 export GPG_TTY=$(tty)
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8

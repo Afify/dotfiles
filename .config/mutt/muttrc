@@ -28,7 +28,7 @@ mailboxes =afify/Spam
 mailboxes =afify/Trash
 
 # basic options
-set editor		= "vim"
+set editor		= "nvim"
 set charset		= "utf-8"
 set assumed_charset	= "utf-8"
 set attach_charset	= "utf-8"
@@ -148,7 +148,7 @@ bind index			G	last-entry
 bind index			k	previous-entry
 bind index			j	next-entry
 bind index			l	display-message
-bind index			L	limit
+bind index			L	noop
 bind index			U	undelete-message
 bind index			<space>	collapse-thread
 

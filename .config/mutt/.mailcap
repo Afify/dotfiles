@@ -1,5 +1,5 @@
-text/plain; vim %s ;
-text/x-patch; vim %s ;
+text/plain; nvim %s ;
+text/x-patch; nvim %s ;
 text/html; surf %s ; nametemplate=%s.html
 text/html; w3m -I %{charset} -T text/html; copiousoutput;
 image/*; sxiv %s ; copiousoutput

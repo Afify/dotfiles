@@ -13,6 +13,8 @@ alias fonts="fc-list | sed 's/^.*: //' | awk -F: '{print $1}' | sort | uniq | le
 alias sc="rsync -avzhe ssh --progress"
 alias cpp="rsync -avzhe --progress"
 alias lsuuid="ls -l /dev/disk/by-uuid/"
+alias vim="nvim"
+alias curls="curl -s --socks5-hostname 127.0.0.1:9050"
 
 if [ "$(uname)" = "Linux" ]; then
 	alias wifi="doas sv restart dhcpcd && wpa_cli -i wlp62s0 reconfigure"
@@ -35,9 +37,10 @@ if [ "$(uname)" = "OpenBSD" ]; then
 	alias ls='colorls -GA'
 fi
 
-alias ll='ls -lh'
+alias ll='ls -l | sed 1d'
 alias gr='grep -Inr'
-alias val="valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all $valf"
+# alias val="valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all $valf"
+alias val="valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all $valf"
 alias vall="val --log-file=val.log"
 alias spp="splint -checks +posixlib +matchanyintegral +enumint -nullpass -nullret ./util.c -DVERSION=\"VERSION\""
 alias ob="objdump -D -M intel"

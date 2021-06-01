@@ -1,0 +1,5 @@
+#!/bin/sh
+url="https://duckduckgo.com/?q="
+if query=$(echo '' | dmenu -p "爵" -sf "#d65d0e" -sb "#111"); then
+        surf "$url""$query"
+fi

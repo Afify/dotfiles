@@ -26,6 +26,7 @@ Plug 'neoclide/coc.nvim'
 Plug 'vim-syntastic/syntastic'
 Plug 'ghifarit53/tokyonight-vim'
 Plug 'ap/vim-css-color'
+Plug 'mtdl9/vim-log-highlighting'
 call plug#end()
 
 "==============================================================================
@@ -94,9 +95,10 @@ ino <End>      <Nop>
 ino <Home>     <Nop>
 ino <F1>       <Nop>
 vno u          <Nop>
+noremap q <esc>:q<CR>
 noremap J o<esc>k
 noremap K O<esc>j
-noremap H 0
+noremap H ^
 noremap L $
 nnoremap <Leader><CR> <Esc>:vsplit
 nnoremap <Leader>= :res +1<CR>
