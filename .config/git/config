@@ -150,7 +150,7 @@
 	# git push -f origin $old_commit_id:main         # change remote branch
 	# git reset --hard origin/<branch_name>            # force sync with remote
 	# git branch -m old-name new-name                  # rename branches
-	# git remote rename origin destination             # rename remote
+	# git remote rename origin github             # rename remote
 	# git remote set-url github git@github.com:afify/REPOSITORY.git # rename remote url
 
 # Remove Undo
