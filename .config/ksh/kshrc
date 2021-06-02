@@ -21,8 +21,8 @@ if [ "$(uname)" = "Linux" ]; then
 	alias xi="doas xbps-install"
 	alias xr="doas xbps-remove"
 	alias xq="xbps-query -Rs"
-	alias svall="doas sv status /run/runit/service/*"
-	alias wsvall="doas watch -n 1 sv status /run/runit/service/*"
+	alias svall="doas sv status /var/service/*"
+	alias wsvall="doas watch -n 1 sv status /var/service/*"
 	alias grep="grep --color=always"
 	alias sys="bat /usr/include/asm/unistd_64.h"
 	alias ls='ls --color=always -A'
