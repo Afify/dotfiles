@@ -16,6 +16,7 @@ exfat-utils
 ffmpeg
 firefox
 fonts-droid-ttf
+gcr-devel
 gdb
 geckodriver
 giflib-devel
@@ -68,6 +69,8 @@ patch
 pavucontrol
 perf
 php
+php-apache
+php-mysql
 pinentry-dmenu
 pkg-config
 pulseaudio
@@ -87,6 +90,7 @@ tor
 unzip
 valgrind
 void-repo-nonfree
+webkit2gtk-devel
 weechat
 wget
 xbacklight
