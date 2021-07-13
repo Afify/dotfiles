@@ -12,10 +12,13 @@ add_gpg_keys(){
 		if ! gpg2 --export-secret-keys $each_key > /tmp/$each_key.pri; then
 			exit
 		fi
+		if ! gpg2 --export $each_key > /tmp/$each_key.pub; then
+			exit
+		fi
 	done
-	keys=$(cd /tmp && ls *.pri)
+	keys=$(cd /tmp && ls *.pri *.pub)
 	tar -cvf "$of" -C /tmp $keys
-	rm -rf /tmp/*.pri
+	rm -rf /tmp/*.pri /tmp/*.pub
 }
 
 compress(){
@@ -34,7 +37,7 @@ check_default_dis(){
 
 today=$(date +%Y_%m_%d)
 files=".ssh .password-store"
-default_dis="/mnt/sd1/backups"
+default_dis="/mnt/4tb/backups"
 check_default_dis
 of=$dis/home_$today.tar
 
